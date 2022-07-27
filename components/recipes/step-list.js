@@ -1,12 +1,17 @@
 import React from "react";
 import Step from "./step";
 
-const StepList = ({ steps, editable = false, removeStep = () => {} }) => {
+const StepList = ({
+  steps,
+  editable = false,
+  removeStep = () => {},
+  ...props
+}) => {
   return (
-    <ol>
-      {steps.map((step) => {
+    <ol {...props} className="list-decimal ml-4 max-w-prose">
+      {steps.map((step, i) => {
         return (
-          <li key={step}>
+          <li className="" key={i}>
             <Step editable={editable} step={step} removeStep={removeStep} />
           </li>
         );

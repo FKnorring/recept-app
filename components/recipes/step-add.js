@@ -8,24 +8,32 @@ const StepAdd = ({ addStep }) => {
     setStep("");
   };
 
-  const handleEnter = (e) => {
-    if (e.key === "Enter") {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  const handleKeyDown = (e) => {
+    console.log(e);
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       handleClick();
     }
   };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <textarea
-        onKeyDown={handleEnter}
+        onKeyDown={handleKeyDown}
         onChange={(e) => setStep(e.target.value)}
         type="text"
         name="name"
         placeholder="Steg"
         value={step}
       />
-      <button onClick={handleClick}>Lägg till steg</button>
-    </div>
+      <button type="submit" onClick={handleClick}>
+        Lägg till steg
+      </button>
+    </form>
   );
 };
 

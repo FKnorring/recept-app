@@ -1,9 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Uchen&display=swap");
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: #fafafa;
 }
 
 a {
@@ -15,6 +21,10 @@ a {
   box-sizing: border-box;
 }
 
+.displayfont {
+  font-family: Uchen;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -23,4 +33,20 @@ a {
     color: white;
     background: black;
   }
+}
+
+.drop-area {
+  min-height: 200px !important;
+  min-width: 200px !important;
+  max-width: 200px !important;
+  min-width: 200px !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border: 1px dashed #ccc !important;
+  border-radius: 0.75rem !important;
+  margin: 0 !important;
+  cursor: pointer;
 }

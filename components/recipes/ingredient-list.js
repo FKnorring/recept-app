@@ -4,13 +4,14 @@ import React from "react";
 const IngredientList = ({
   ingredients,
   editable = false,
+  list = true,
   removeIngredient = () => {},
 }) => {
   return (
-    <ul>
-      {ingredients.map((ingredient) => {
+    <ul className={list ? "list-disc ml-5" : undefined}>
+      {ingredients.map((ingredient, i) => {
         return (
-          <li key={ingredient.name}>
+          <li key={i} className="w-[25ch]">
             <Ingredient
               editable={editable}
               ingredient={ingredient}

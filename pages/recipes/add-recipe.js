@@ -1,21 +1,37 @@
 import React, { useState } from "react";
-import { addRecipe, auth, uploadImage } from "../store/firestore";
+import { addRecipe, auth, uploadImage } from "../../store/firestore";
 
-import IngredientAdd from "../components/ingredient-add";
-import IngredientList from "../components/ingredient-list";
-import StepAdd from "../components/step-add";
-import StepList from "../components/step-list";
+import DropImage from "../../components/dropimage";
+import { FileUploader } from "react-drag-drop-files";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
+import IngredientAdd from "../../components/recipes/ingredient-add";
+import IngredientList from "../../components/recipes/ingredient-list";
+import StepAdd from "../../components/recipes/step-add";
+import StepList from "../../components/recipes/step-list";
 import { getDownloadURL } from "firebase/storage";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
+
+const NotUploaded = () => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <FontAwesomeIcon icon={solid("camera")} size="2x" />
+      <p className="my-2 text-center text-primary-800">Ladda upp bild här</p>
+    </div>
+  );
+};
 
 const AddRecipe = () => {
   const [user, loading, error] = useAuthState(auth);
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [portions, setPortions] = useState(4);
   const [ingredients, setIngredients] = useState([]);
   const [steps, setSteps] = useState([]);
-  const [image, setImage] = useState(null);
   const [imgUrl, setImgUrl] = useState("");
+  const router = useRouter();
 
   const addIngredient = (ingredient) => {
     setIngredients([...ingredients, ingredient]);
@@ -35,16 +51,6 @@ const AddRecipe = () => {
     setSteps(steps.filter((s) => s !== step));
   };
 
-  const handleImageFile = (e) => {
-    setImage(e.target.files[0]);
-    const uploadTask = uploadImage(image);
-    uploadTask.then((snapshot) => {
-      getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-        setImgUrl(url);
-      });
-    });
-  };
-
   const submit = () => {
     if (
       !user ||
@@ -54,14 +60,13 @@ const AddRecipe = () => {
       !steps.length ||
       !imgUrl
     ) {
-      //log all conditions
-      console.log(user, name, portions, ingredients, steps, imgUrl);
       alert("Please fill in all fields");
       return;
     }
     addRecipe({
       user: user.uid,
       name: name,
+      description: description,
       portions: portions,
       ingredients: ingredients,
       steps: steps,
@@ -70,13 +75,32 @@ const AddRecipe = () => {
   };
 
   return (
-    <div>
+    <div className="max-w-[1200px] px-10 py-8 mx-auto">
+      <FontAwesomeIcon
+        icon={solid("arrow-left")}
+        size="2x"
+        onClick={() => router.back()}
+      />
+      <div>
+        <DropImage
+          noFile={<NotUploaded />}
+          imgUrl={imgUrl}
+          setImgUrl={setImgUrl}
+        />
+      </div>
       <div>
         <h4>Receptnamn</h4>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div>
+        <h4>Receptbeskrivning</h4>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </div>
       <div>
@@ -97,7 +121,6 @@ const AddRecipe = () => {
       <h4>Instruktioner</h4>
       <StepAdd addStep={addStep} />
       <StepList steps={steps} editable={true} removeStep={removeStep} />
-      <input type="file" accept="image/*" onChange={handleImageFile}></input>
       <button onClick={submit}>Lägg till recept</button>
     </div>
   );
