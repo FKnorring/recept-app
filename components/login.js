@@ -1,5 +1,5 @@
+import { Button, TextField, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { auth, getUser, signout } from "../store/firestore";
 import {
   useAuthState,
   useSignInWithEmailAndPassword,
@@ -8,13 +8,22 @@ import {
 } from "react-firebase-hooks/auth";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
+import { auth } from "../store/firebase";
 import { brands } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { getUser } from "../store/firestore";
+import { signout } from "../store/auth";
 import { useRouter } from "next/router";
+
+const WhiteTextField = styled(TextField)({
+  background: "white",
+})
 
 const Google = () => {
   const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
   return (
     <FontAwesomeIcon
+      className="pointer"
       onClick={() => signInWithGoogle()}
       icon={brands("google")}
       size={"3x"}
@@ -53,31 +62,36 @@ const Login = () => {
         if (user.data() === undefined) router.push("/create-profile");
       });
     }
-  }, [user]);
+  }, [user, router]);
 
   return (
     <div>
-      <input
+      <TextField
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         type="email"
         placeholder="Email"
       />
-      <input
+      <TextField
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         type="password"
         placeholder="Lösenord"
       />
-      <button onClick={handleSignIn}> Logga in </button>
+      <Button
+        type="submit"
+        variant="contained"
+        color="success"
+        onClick={handleSignIn}
+      >
+        {" "}
+        Logga in{" "}
+      </Button>
       <div>
-        <h5>Logga in med</h5>
         <Google />
-        <Facebook />
-        {user && user.email}
       </div>
       <button onClick={signout}>Logga ut</button>
-      <a href="/signup">Registrera dig</a>
+      <Link href="/signup">Registrera dig</Link>
     </div>
   );
 };

@@ -6,19 +6,16 @@ module.exports = {
   ],
   theme: {
     colors: {
-      primary: {
-        100: "#fbf7f2",
-        200: "#f6efe5",
-        300: "#f2e8d8",
-        400: "#ede0cb",
-        500: "#e9d8be",
-        600: "#baad98",
-        700: "#8c8272",
-        800: "#5d564c",
-        900: "#2f2b26",
-      },
+      primary: "#FFE0B2",
+      accent: "#FEE361",
+      bg: "#FBFAF3",
+      neut: "#808080",
+      secondary: "#26A69A",
     },
-    extend: {},
+    fontFamily: {
+      sans: ["Inter", "sans-serif"],
+      serif: ["Playfair Display", "serif"],
+    },
   },
   plugins: [],
 };

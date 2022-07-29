@@ -1,45 +1,49 @@
 //import react and other dependencies
 import React, { useState } from "react";
 
+import { CircularProgress } from "@mui/material";
 import { FileUploader } from "react-drag-drop-files";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { getDownloadURL } from "firebase/storage";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { uploadImage } from "../store/firestore";
+import { uploadImage } from "../store/storage";
 
 const NoFile = () => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="">
       <FontAwesomeIcon icon={solid("camera")} size="2x" />
-      <p className="my-2 text-center text-primary-800">
-        Ladda upp din bild här
-      </p>
     </div>
   );
 };
 
 const UploadedImage = ({ image, url }) => {
+  const [loading, setLoading] = useState(true);
+
   return (
-    <Image
-      className="rounded-lg m-0 p-0"
-      width={200}
-      height={200}
-      src={url}
-      alt={image.name}
-      objectFit="cover"
-    />
+    <>
+      {loading && <CircularProgress />}
+      <Image
+        onLoadingComplete={() => setLoading(false)}
+        className="rounded-full"
+        width={loading ? 0 : 200}
+        height={loading ? 0 : 200}
+        src={url}
+        alt={image.name}
+        objectFit="cover"
+      />
+    </>
   );
 };
 
-const DropImage = ({ noFile = <NoFile />, imgUrl, setImgUrl }) => {
+const DropImage = ({ noFile = <NoFile />, imgUrl, setImgUrl, uid = null }) => {
   const [image, setImage] = useState(null);
 
   const handleImageFile = (file) => {
     const image = file;
     setImage(image);
     if (!image.name) return;
-    const uploadTask = uploadImage(image);
+    const uploadTask = uploadImage(image, uid);
     uploadTask.then((snapshot) => {
       getDownloadURL(uploadTask.snapshot.ref)
         .then((url) => {
@@ -57,7 +61,7 @@ const DropImage = ({ noFile = <NoFile />, imgUrl, setImgUrl }) => {
       name="file"
       types={["jpg", "jpeg", "png"]}
       label="Lägg till bild"
-      classes="drop-area"
+      classes="flex justify-center items-center rounded-full w-[200px] h-[200px] bg-primary bg-opacity-25 outline-primary outline-dashed outline-2 cursor-pointer"
     >
       {imgUrl ? <UploadedImage image={image} url={imgUrl} /> : noFile}
     </FileUploader>

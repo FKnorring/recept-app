@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import IngredientList from "../../components/recipes/ingredient-list";
 import StepList from "../../components/recipes/step-list";
-import { getRecipe } from "../../store/firestore";
+import { getRecipe } from "../../store/firebase";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useRouter } from "next/router";
 

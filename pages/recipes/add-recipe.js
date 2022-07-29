@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { addRecipe, auth, uploadImage } from "../../store/firestore";
 
 import DropImage from "../../components/dropimage";
-import { FileUploader } from "react-drag-drop-files";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
 import IngredientAdd from "../../components/recipes/ingredient-add";
 import IngredientList from "../../components/recipes/ingredient-list";
 import StepAdd from "../../components/recipes/step-add";
 import StepList from "../../components/recipes/step-list";
-import { getDownloadURL } from "firebase/storage";
+import { addRecipe } from "../../store/firestore";
+import { auth } from "../../store/firebase";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
