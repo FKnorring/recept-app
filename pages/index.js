@@ -1,33 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 
-import DiscoverController from "../components/discover/discover-controller";
-import Header from "../components/header";
-import { auth } from "../store/firebase";
-import { getUser } from "../store/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 export default function Home() {
-  const [user, loading, error] = useAuthState(auth);
-  const [userInfo, setUserInfo] = useState({});
-  const router = useRouter();
+  const session = useSession();
 
-  useEffect(() => {
-    if (user) {
-      getUser(user.uid).then((user) => {
-        if (user.data() !== undefined) {
-          setUserInfo(user.data());
-        }
-      });
-    } else if (!loading) {
-      router.push("/login");
-    }
-  }, [user, router, loading]);
+  const supabase = useSupabaseClient();
 
   return (
-    <div className="w-full h-full">
-      <Header />
-      <DiscoverController user={user} userInfo={userInfo} />
+    <div className="container" style={{ padding: "50px 0 100px 0" }}>
+      {!session ? (
+        <Auth
+          supabaseClient={supabase}
+          appearance={{ theme: ThemeSupa }}
+          theme="dark"
+        />
+      ) : (
+        <div>
+          <button
+            className="button block"
+            onClick={() => supabase.auth.signOut()}
+          >
+            Sign Out
+          </button>
+        </div>
+      )}
     </div>
   );
-}
+};
